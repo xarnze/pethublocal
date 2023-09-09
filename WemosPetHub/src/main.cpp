@@ -171,7 +171,7 @@ void reconnect() {
     if (DEBUGMESSAGES) {
       Serial.println("Attempting MQTT connection...");
     }
-    if (mqttClient.connect(MQTTClientID)) {
+    if (mqttClient.connect(MQTTClientID, MQTT_USER, MQTT_PASS)) {
       if (DEBUGMESSAGES) {
         Serial.println("connected");
       }
@@ -346,6 +346,7 @@ void handle_rx() {
     {
         tx_info.data[j] = data[j] ;
     }
+    sendmqtt = true;
   } 
 
   //Data frame
@@ -419,9 +420,9 @@ void handle_rx() {
     strcpy(MQTTTopicMsg, MQTTTopic);
     strcat(MQTTTopicMsg, "/");
     strcat(MQTTTopicMsg,mac2str(mrf.get_rxinfo()->src).c_str());
-    noInterrupts();
+    //noInterrupts();
     mqttClient.publish(MQTTTopicMsg,rxchar);
-    interrupts();
+    //interrupts();
   }
   if (sendframe) {
     mrf.sendframe(tx_info);
@@ -476,7 +477,8 @@ void setup() {
   Serial.println("MQTT Connected");
 
   //Set hardware configuration as a json to be configured externally later.
-  char hardwareconfig[] = "{'hwmac': '80:1F:12:FF:FE:E8:8D:D9'}";
+  //char hardwareconfig[] = "{'hwmac': '98:27:82:FF:FE:E0:51:54'}";
+  char hardwareconfig[] = "{'hwmac': '83:08:04:CF:F9:D5:B3:70'}";
   DeserializationError error = deserializeJson(hwdoc, hardwareconfig);
   if (error) {
     Serial.print(F("deserializeJson() failed: "));
@@ -489,7 +491,7 @@ void setup() {
 
   // Hard code devices struct, to move to json payload for config later
   device_t *d0 = &devices[0];
-  d0->mac = "52E26AFEFF121F80";
+  d0->mac = "70B3D5F9CF040883";
   d0->online = false;
   d0->sequence= 0x00;
   device_t *d1 = &devices[1];
@@ -522,13 +524,13 @@ void setup() {
 
   // We are a coordinator 
 //  mrf.set_coordinator();
-  mrf.set_pancontroller(true);
+  //mrf.set_pancontroller(true);
 
   //The SurePet PAN to use
   mrf.set_pan(0x3421);
 
   // uncomment if you want to receive any packet on this channel
-//  mrf.set_promiscuous(true);
+  //mrf.set_promiscuous(true);
   mrf.rx_flush();
  
   // uncomment if you want to buffer all PHY Payload
