@@ -3,3 +3,5 @@
 /docker/config.ini
 /docker/source/pethublocal.db
 /docker/test/*.db
+.DS_Store
+WemosPetHub/include/main.h
