@@ -179,7 +179,7 @@ void reconnect() {
       // Once connected, publish an announcement...
       mqttClient.publish(MQTTTopic, "PetHubLocal connected to MQTT");
       // ... and resubscribe
-//      mqttClient.subscribe(MQTTTopic);
+      mqttClient.subscribe(MQTTTopic);
 
     } else {
       Serial.print("failed, rc=");
@@ -202,7 +202,7 @@ void connectmqtt()
 
     mqttClient.publish(MQTTTopic,  "PetHubLocal connected to MQTT");
     // ... and resubscribe
-//    mqttClient.subscribe(MQTTTopic); 
+    mqttClient.subscribe(MQTTTopic); 
 
     if (!mqttClient.connected())
     {
